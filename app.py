@@ -8,6 +8,9 @@ from routes.smart import smart_bp
 from routes.ocr import ocr_bp
 import os
 
+port = int(os.environ.get("PORT", 10000))
+app.run(host="0.0.0.0", port=port)
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey' # For session management
 CORS(app)
