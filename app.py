@@ -8,18 +8,13 @@ from routes.smart import smart_bp
 from routes.ocr import ocr_bp
 import os
 
-port = int(os.environ.get("PORT", 10000))
-app.run(host="0.0.0.0", port=port)
-
 app = Flask(__name__)
-app.secret_key = 'supersecretkey' # For session management
+app.secret_key = 'supersecretkey'
 CORS(app)
 
-# Initialize Database
 if not os.path.exists('expenses.db'):
     init_db()
 
-# Register Blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(expense_bp)
 app.register_blueprint(analysis_bp)
@@ -34,10 +29,10 @@ def index():
 def login_page():
     return render_template('login.html')
 
-# Serve static files (if needed, Flask does this automatically for /static)
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
