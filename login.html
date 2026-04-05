@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access | ExpenseSense Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --glass-bg: rgba(22, 27, 34, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #58a6ff;
+            --accent-hover: #1f6feb;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --success: #3fb950;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(88, 166, 255, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(63, 185, 80, 0.1) 0, transparent 50%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-primary);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            display: flex;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Left Side - Branding */
+        .branding {
+            flex: 1;
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            text-align: center;
+            border-right: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branding::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(88, 166, 255, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .branding i {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            z-index: 1;
+            filter: drop-shadow(0 0 20px rgba(88, 166, 255, 0.3));
+        }
+
+        .branding h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            z-index: 1;
+            background: linear-gradient(to right, #fff, #8b949e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .branding p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 280px;
+            z-index: 1;
+        }
+
+        /* Right Side - Form Area */
+        .form-area {
+            flex: 1.2;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(13, 17, 23, 0.4);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .form-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem; }
+
+        .input-group { margin-bottom: 1.25rem; position: relative; }
+        .input-group i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 1.1rem 1.1rem 1.1rem 3.5rem;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.1);
+        }
+
+        input:focus + i { color: var(--accent-color); }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1.1rem;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(88, 166, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .alert-error {
+            background: rgba(248, 81, 73, 0.1);
+            color: #ff7b72;
+            border: 1px solid rgba(248, 81, 73, 0.2);
+        }
+
+        .alert-success {
+            background: rgba(63, 185, 80, 0.1);
+            color: #7ee787;
+            border: 1px solid rgba(63, 185, 80, 0.2);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 850px) {
+            .branding { display: none; }
+            .container { max-width: 450px; height: auto; }
+            .form-area { padding: 3rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side Branding -->
+        <div class="branding">
+            <i class="fas fa-wallet"></i>
+            <h1>ExpenseSense</h1>
+            <p>Smart financial tracking for the next generation of savers.</p>
+        </div>
+
+        <!-- Right Side Form -->
+        <div class="form-area">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('signup')">Sign In</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="form-content active">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Enter your credentials to access your dashboard.</p>
+                <div id="login-alert" class="alert alert-error"></div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="text" id="login-user" placeholder="Username" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-pass" placeholder="Password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="btn-container">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sign Up Form (Sign In as requested) -->
+            <div id="signup-form-container" class="form-content">
+                <h2>Create Account</h2>
+                <p class="subtitle">Start your journey with us today.</p>
+                <div id="signup-alert" class="alert"></div>
+                <form id="signup-form">
+                    <div class="input-group">
+                        <input type="text" id="reg-user" placeholder="Choose Username" required>
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="reg-pass" placeholder="Create Password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="reg-conf" placeholder="Confirm Password" required>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="btn-container">
+                        <button type="submit" class="btn btn-primary" style="background: var(--success);">
+                            <i class="fas fa-user-check"></i> Sign In
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.form-content').forEach(form => form.classList.remove('active'));
+            
+            if(tab === 'login') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('login-form-container').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('signup-form-container').classList.add('active');
+            }
+        }
+
+        // Auth Logic
+        const users = JSON.parse(localStorage.getItem('users')) || { 'sanjana': '9897', 'admin': 'admin' };
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const u = document.getElementById('login-user').value;
+            const p = document.getElementById('login-pass').value;
+            const alert = document.getElementById('login-alert');
+
+            if(users[u] === p) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUser', u);
+                window.location.href = 'index.html';
+            } else {
+                alert.textContent = 'Invalid username or password!';
+                alert.style.display = 'block';
+                setTimeout(() => { alert.style.display = 'none'; }, 3000);
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const u = document.getElementById('reg-user').value;
+            const p = document.getElementById('reg-pass').value;
+            const c = document.getElementById('reg-conf').value;
+            const alert = document.getElementById('signup-alert');
+
+            if(p !== c) {
+                alert.textContent = 'Passwords do not match!';
+                alert.className = 'alert alert-error';
+                alert.style.display = 'block';
+                return;
+            }
+
+            if(users[u]) {
+                alert.textContent = 'Username already exists!';
+                alert.className = 'alert alert-error';
+                alert.style.display = 'block';
+                return;
+            }
+
+            users[u] = p;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert.textContent = 'Account created successfully! Please login.';
+            alert.className = 'alert alert-success';
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+                switchTab('login');
+            }, 2000);
+        });
+
+        // Redirect if already logged in
+        if(localStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenseSense | Professional Financial Assistant</title>
+    <!-- Google Fonts: DM Sans and JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tesseract.js for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background Container -->
+    <div class="animated-bg">
+        <div class="bg-slideshow" id="bg-slideshow"></div>
+        <div class="bg-overlay"></div>
+        <div class="floating-blobs">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+    </div>
+
+    <!-- Login Portal -->
+    <div id="login-portal" class="login-overlay">
+        <div class="login-card glass">
+            <div class="logo"><i class="fas fa-chart-pie"></i></div>
+            <h2>Welcome, Sanjana</h2>
+            <p class="subtitle">Secure Financial Access</p>
+            <div id="login-error" class="error-msg hidden">Invalid Password!</div>
+            <form id="main-login-form">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="main-username" placeholder="Username" value="sanjana" readonly>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="main-password" placeholder="Password" required autofocus>
+                </div>
+                <button type="submit" class="btn-primary full-width">Login Securely</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-content" class="hidden">
+        <div id="loading-overlay" class="hidden">
+            <div class="spinner"></div>
+            <p id="loading-text">Processing Receipt...</p>
+        </div>
+
+        <div class="hero-section">
+            <h1 class="animated-title">Expenses Analyser Pro</h1>
+            <p class="hero-subtitle">Smart Financial Management for a Modern World</p>
+        </div>
+
+        <div class="moving-banner">
+            <div class="banner-track">
+                <span>Smart Tracking • Visual Insights • Budget Control • Expense Analysis • Receipt Scanning • AI Insights • Real-time Data • Financial Freedom • Smart Tracking • Visual Insights • Budget Control • Expense Analysis • Receipt Scanning • AI Insights • Real-time Data • Financial Freedom</span>
+                <span>Smart Tracking • Visual Insights • Budget Control • Expense Analysis • Receipt Scanning • AI Insights • Real-time Data • Financial Freedom • Smart Tracking • Visual Insights • Budget Control • Expense Analysis • Receipt Scanning • AI Insights • Real-time Data • Financial Freedom</span>
+            </div>
+        </div>
+
+        <header class="sticky-header">
+            <div class="header-container">
+                <div class="logo">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>ExpenseSense</span>
+                </div>
+                <div class="header-inputs">
+                    <div class="input-group">
+                        <label for="monthly-budget">Monthly Budget</label>
+                        <div class="currency-input">
+                            <span>₹</span>
+                            <input type="number" id="monthly-budget" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="monthly-income">Monthly Income</label>
+                        <div class="currency-input">
+                            <span>₹</span>
+                            <input type="number" id="monthly-income" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="input-group logout-group">
+                        <button id="logout-btn" class="btn-logout" title="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-container">
+            <!-- Stats Overview Section -->
+            <section class="stats-grid">
+                <div class="stat-card glass">
+                    <h3>Current Balance</h3>
+                    <p id="total-balance" class="amount">₹0.00</p>
+                    <div class="progress-container">
+                        <div id="savings-progress" class="progress-bar"></div>
+                    </div>
+                    <span class="sub-text">Savings Progress</span>
+                </div>
+                <div class="stat-card glass">
+                    <h3>Total Expenses</h3>
+                    <p id="total-expenses" class="amount">₹0.00</p>
+                    <span class="sub-text">All-time tracked</span>
+                </div>
+                <div class="stat-card glass">
+                    <h3>Monthly Spending</h3>
+                    <p id="monthly-expenses-card" class="amount">₹0.00</p>
+                    <div class="progress-container">
+                        <div id="budget-progress" class="progress-bar"></div>
+                    </div>
+                    <span id="budget-status" class="sub-text">0% of budget</span>
+                </div>
+                <div class="stat-card glass highlight">
+                    <h3>Projected Next Month</h3>
+                    <p id="prediction-amount" class="amount">₹0.00</p>
+                    <span class="sub-text">Based on spending trends</span>
+                </div>
+            </section>
+
+            <!-- Insights and Suggestions -->
+            <section class="insights-container">
+                <div class="insight-card glass">
+                    <div class="insight-header">
+                        <h3><i class="fas fa-brain"></i> AI Spending Analysis</h3>
+                    </div>
+                    <div id="smart-suggestions" class="suggestions-list">
+                        <p class="empty-msg">Waiting for transaction data...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Grid -->
+            <section class="charts-grid">
+                <div class="chart-card glass">
+                    <h3>Expense Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card glass">
+                    <h3>Spending Trend</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="dailyTrendChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Management Section -->
+            <section class="management-section">
+                <div class="add-expense-card glass">
+                    <div class="card-header">
+                        <h3>Add Transaction</h3>
+                        <div class="ocr-upload">
+                            <input type="file" id="receipt-upload" accept="image/*" class="hidden">
+                            <button type="button" class="btn-ocr" onclick="document.getElementById('receipt-upload').click()">
+                                <i class="fas fa-camera"></i> Scan Receipt
+                            </button>
+                        </div>
+                    </div>
+                    <form id="expense-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="amount">Amount (₹)</label>
+                                <input type="number" id="amount" required step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" required>
+                                    <option value="Food">Food</option>
+                                    <option value="Travel">Travel</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="date">Date</label>
+                                <input type="date" id="date" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="note">Description</label>
+                                <input type="text" id="note" placeholder="What did you spend on?">
+                            </div>
+                            <button type="submit" id="submit-btn" class="btn-primary">Add Expense</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="transactions-card glass">
+                    <div class="transactions-header">
+                        <h3>Recent Transactions</h3>
+                        <div class="table-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="search-input" placeholder="Search...">
+                            </div>
+                            <select id="filter-category">
+                                <option value="All">All Categories</option>
+                                <option value="Food">Food</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <button id="export-csv" class="btn-secondary" title="Export to CSV">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="expense-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Note</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features-section">
+                <h2 class="section-title">Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card glass">
+                        <div class="feature-icon"><i class="fas fa-history"></i></div>
+                        <h3>Track Daily Expenses</h3>
+                        <p>Easily log and manage your daily spending with detailed categories and notes.</p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Charts & Analysis</h3>
+                        <p>Visualize your financial habits with interactive pie and bar charts.</p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+                        <h3>Budget Management</h3>
+                        <p>Set monthly goals and get real-time alerts when you're close to your limit.</p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon"><i class="fas fa-lightbulb"></i></div>
+                        <h3>Smart Insights</h3>
+                        <p>Receive AI-driven suggestions to optimize your spending and save more.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Container -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Login Script -->
+    <script>
+        document.getElementById('main-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const u = document.getElementById('main-username').value;
+            const p = document.getElementById('main-password').value;
+            const error = document.getElementById('login-error');
+
+            if(u === 'sanjana' && p === '9897') {
+                localStorage.setItem('isLoggedIn', 'true');
+                document.getElementById('login-portal').classList.add('hidden');
+                document.getElementById('dashboard-content').classList.remove('hidden');
+                // Dispatch event to re-init charts/data if needed
+                window.dispatchEvent(new Event('DOMContentLoaded'));
+            } else {
+                error.classList.remove('hidden');
+                setTimeout(() => error.classList.add('hidden'), 3000);
+            }
+        });
+
+        // Check login on load
+        if(localStorage.getItem('isLoggedIn') === 'true') {
+            document.getElementById('login-portal').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.remove('hidden');
+        }
+    </script>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
