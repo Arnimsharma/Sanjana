@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access | ExpenseSense Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --glass-bg: rgba(22, 27, 34, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #58a6ff;
+            --accent-hover: #1f6feb;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --success: #3fb950;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(88, 166, 255, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(63, 185, 80, 0.1) 0, transparent 50%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-primary);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            display: flex;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .branding {
+            flex: 1;
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            text-align: center;
+            border-right: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branding i {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            z-index: 1;
+        }
+
+        .branding h1 { font-size: 2.5rem; margin-bottom: 1rem; z-index: 1; }
+        .branding p { color: var(--text-secondary); font-size: 1.1rem; z-index: 1; }
+
+        .form-area {
+            flex: 1.2;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(13, 17, 23, 0.4);
+        }
+
+        .tabs { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
+        .tab-btn {
+            background: none; border: none; color: var(--text-secondary);
+            font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            padding-bottom: 0.5rem; border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn.active { color: var(--accent-color); border-bottom-color: var(--accent-color); }
+
+        .form-content { display: none; }
+        .form-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+        .input-group { margin-bottom: 1.25rem; position: relative; }
+        .input-group i { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+        input {
+            width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+            padding: 1.1rem 1.1rem 1.1rem 3.5rem; border-radius: 16px; color: white; outline: none;
+        }
+        input:focus { border-color: var(--accent-color); }
+
+        .btn {
+            width: 100%; padding: 1.1rem; border-radius: 16px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; border: none;
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+        }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(88, 166, 255, 0.2); }
+
+        .alert { padding: 1rem; border-radius: 12px; font-size: 0.9rem; margin-bottom: 1.5rem; display: none; }
+        .alert-error { background: rgba(248, 81, 73, 0.1); color: #ff7b72; border: 1px solid rgba(248, 81, 73, 0.2); }
+        .alert-success { background: rgba(63, 185, 80, 0.1); color: #7ee787; border: 1px solid rgba(63, 185, 80, 0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="branding">
+            <i class="fas fa-wallet"></i>
+            <h1>ExpenseSense</h1>
+            <p>Smart financial tracking for the next generation of savers.</p>
+        </div>
+
+        <div class="form-area">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="form-content active">
+                <h2>Welcome Back</h2>
+                <div id="login-alert" class="alert alert-error"></div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="text" id="login-user" placeholder="Username" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-pass" placeholder="Password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signup-form-container" class="form-content">
+                <h2>Create Account</h2>
+                <div id="signup-alert" class="alert"></div>
+                <form id="signup-form">
+                    <div class="input-group">
+                        <input type="text" id="reg-user" placeholder="Username" required>
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="reg-email" placeholder="Email" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="reg-pass" placeholder="Password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="background: var(--success);">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.form-content').forEach(form => form.classList.remove('active'));
+            if(tab === 'login') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('login-form-container').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('signup-form-container').classList.add('active');
+            }
+        }
+
+        const API_BASE = window.location.origin;
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-user').value;
+            const password = document.getElementById('login-pass').value;
+            const alert = document.getElementById('login-alert');
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('user_id', data.user_id);
+                    localStorage.setItem('username', data.username);
+                    window.location.href = '/';
+                } else {
+                    alert.textContent = data.error || 'Login failed';
+                    alert.style.display = 'block';
+                }
+            } catch (err) {
+                alert.textContent = 'Connection error';
+                alert.style.display = 'block';
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-user').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-pass').value;
+            const alert = document.getElementById('signup-alert');
+
+            try {
+                const response = await fetch(`${API_BASE}/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert.textContent = 'Account created! Please login.';
+                    alert.className = 'alert alert-success';
+                    alert.style.display = 'block';
+                    setTimeout(() => switchTab('login'), 2000);
+                } else {
+                    alert.textContent = data.error || 'Signup failed';
+                    alert.className = 'alert alert-error';
+                    alert.style.display = 'block';
+                }
+            } catch (err) {
+                alert.textContent = 'Connection error';
+                alert.className = 'alert alert-error';
+                alert.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
